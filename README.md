@@ -1,2 +1,2 @@
 # ProjectBundle
-This repository contains bunch of completed old programs.
+This repository contains bunch of old finished programs.
