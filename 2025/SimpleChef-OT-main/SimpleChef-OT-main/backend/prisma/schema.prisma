@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Recipe {
+  id                Int                @id @default(autoincrement())
+  title             String
+  description       String?
+  instructions      String
+  imageUrl          String?
+  likesCount        Int                @default(0)
+  createdAt         DateTime           @default(now())
+  isPublic          Boolean   @default(false) // uusi kenttä
+  
+  userId            Int
+  user              User               @relation(fields: [userId], references: [id])
+  
+  recipeIngredients RecipeIngredient[]
+  favorites         Favorite[]
+
+  @@index([title])
+  @@index([likesCount])
+}
+
+model Ingredient {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  recipeIngredients RecipeIngredient[]
+}
+
+model RecipeIngredient {
+  recipeId     Int
+  ingredientId Int
+
+  recipe     Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+
+  @@id([recipeId, ingredientId])
+  @@index([ingredientId])
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  name      String?
+  password  String
+  createdAt DateTime   @default(now())
+  
+  recipes   Recipe[]   // uusi relaatio
+  favorites Favorite[]
+}
+
+model Favorite {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  recipeId  Int
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, recipeId])
+  @@index([recipeId])
+}

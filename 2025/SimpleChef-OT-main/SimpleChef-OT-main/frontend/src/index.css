@@ -1,0 +1,22 @@
+@import url("https://fonts.googleapis.com/css2?family=Delius&display=swap");
+@import "tailwindcss";
+@plugin "daisyui";
+
+:root {
+  --font-delius: "Delius", cursive;
+}
+
+body,
+#root {
+  font-family: var(--font-delius);
+}
+
+@plugin "daisyui/theme" {
+  name: "dark";
+  default: true;
+  --color-primary: #b45309;
+
+  --color-secondary: #0d9488;
+  --color-error: darkred;
+  --color-error-content: #ffffff;
+}
